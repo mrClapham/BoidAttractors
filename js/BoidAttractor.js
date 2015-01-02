@@ -1,20 +1,27 @@
 var boids = [];
-var _obsticle;
+var obsticles = []
 
 
 function setup() {
-    createCanvas(800, 900);
+    createCanvas(900, 1000);
 
     // Add an initial set of boids into the system
     for (var i = 0; i < 100; i++) {
         boids[i] = new Boid(random(width), random(height));
     }
-    _obsticle = new Obsticle(boids);
+    var _obsticle   = new Obsticle(200, 500,boids);
+    var _obsticle2  = new Obsticle(400, 400,boids);
+    var _obsticle3  = new Obsticle(800, 800,boids);
+    obsticles       = [_obsticle, _obsticle2, _obsticle3];
 }
 
 function draw() {
-    background(51);
-    _obsticle.render();
+    background(51, 3);
+
+    for(var i=0; i<obsticles.length; i++){
+        obsticles[i].render();
+    }
+
     // Run all the boids
     for (var i = 0; i < boids.length; i++) {
         boids[i].run(boids);
@@ -23,15 +30,15 @@ function draw() {
 
 // An obsticle to be avoided
 
-function Obsticle(flock){
+function Obsticle(x,y,flock){
     this._flock = flock;
-    this.rad = 30;
-    this.xpos = 200;
-    this.ypos = 200;
-    this.repulsion = 80;
-    this.attractiveness = -100;
+    this.rad = 6;
+    this.xpos = x;
+    this.ypos = y;
+    this.excusionZone = 100;
+    this.repulsion = .0140;
     this.position = createVector(this.xpos, this.ypos)
-    this.colour = {r:255,g:0, b:255};
+    this.colour = {r:100,g:100, b:100};
 }
 
 Obsticle.prototype.update = function(){
@@ -40,12 +47,14 @@ Obsticle.prototype.update = function(){
         var vec = createVector(f.position.x, f.position.y);
         var exclusion = createVector(this.position.x,this.position.y);
         vec.sub(exclusion);
-        if(vec.mag() < this.repulsion ){
+        if(vec.mag() < this.excusionZone ){
             stroke(255, 0,0);
             //line(this.position.x, this.position.y, f.position.x, f.position.y);
             //stroke(100, 255,0)
             //line(this.position.x, this.position.y, exclusion.x, exclusion.y);
-            this._flock[i].applyForce(vec.mult(100));
+            vec.mult(this.repulsion)
+
+            this._flock[i].applyForce(vec);
         }
     }
 }
@@ -53,6 +62,7 @@ Obsticle.prototype.update = function(){
 Obsticle.prototype.render = function(){
     this.update();
     fill(this.colour.r, this.colour.g, this.colour.b);
+    noStroke();
     ellipse(this.xpos, this.ypos, this.rad, this.rad);
 }
 
@@ -124,7 +134,7 @@ Boid.prototype.seek = function(target) {
 Boid.prototype.render = function() {
     // Draw a triangle rotated in the direction of velocity
     var theta = this.velocity.heading() + radians(90);
-    fill(127);
+    fill(0,255,255);
     stroke(200);
     push();
     translate(this.position.x,this.position.y);
