@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="bower_components/p5js/lib/p5.min.js"></script>
+    <script src="js/BoidAttractorClass.js"></script>
+</head>
+<body onload="onLoaded()">
+<div id="targ">
+
+</div>
+
+</body>
+</html>
+
+<script>
+    onLoaded = function(){
+    var targ = document.getElementById("targ")
+    var _flock = new BoidFlock(targ);
+
+    }
+</script>
