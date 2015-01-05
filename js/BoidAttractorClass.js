@@ -88,7 +88,7 @@ var _privates = {
                     yp  = ystep+(xstep*ii);
                     rep = (-0.002+Math.random() *.009)
                     _rowX.push({x:xp, y:yp});
-                    this.addAttractor(xp,yp,{repulsion:rep});
+                    this.addAttractor(xp,yp,{repulsion:rep, excusionZone:Math.random()*80});
                 }
                 _grid.push(_rowX)
             }
