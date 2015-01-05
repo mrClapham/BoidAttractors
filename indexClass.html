@@ -16,8 +16,8 @@
 <script>
     onLoaded = function(){
     var targ = document.getElementById("targ")
-    var _flock = new BoidFlock(targ, {flockSize:200, width:1200, height:900});
-
+    var _flock = new BoidFlock(targ, {flockSize:200, width:800, height:800});
+        _flock.setAttractorGrid(3, 3);
 
        // setInterval(function(){_flock.addAttractor(Math.random()*800, Math.random()*800), {repulsion:Math.random()}}, 1000)
         //setInterval(function(){console.log(_flock)}, 1000)
