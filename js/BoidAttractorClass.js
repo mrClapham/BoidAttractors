@@ -6,11 +6,12 @@ var _privates = {
     width : 1000,
     height:1000,
     flockSize : 100,
-    startColour:{r:100,g:0,b:255},
-    endColour:{r:255,g:0,b:50},
+    startColour:{r:10,g:0,b:255},
+    endColour:{r:255,g:0,b:0},
     backgroundColour:{r:255, g:255, b:255},
     backgroundTransparency:2,
-    tweenColours:true
+    tweenColours:true,
+    colourSteps:100
 }
 
     var _config = opt_config || {};
@@ -24,12 +25,9 @@ var _privates = {
 
         sketch.setup = function() {
             sketch.createCanvas(_privates.width, _privates.height);
-
-            //BoidFlock._onConfigSet.call(this)
-
             var _boidConfig =     {startColour:_privates.startColour,
             endColour:_privates.endColour,
-            tweenColours:_privates.endColour}
+            tweenColours:_privates.tweenColours}
 
             // Add an initial set of boids into the system
             for (var i = 0; i < _privates.flockSize; i++) {
@@ -55,8 +53,15 @@ var _privates = {
                 _privates.boids[i].run(_privates.boids);
             }
         }
+
+        sketch.getColourTweenArray = function(){
+            if(!this.colourTweenArray){
+                this.colourTweenArray = BoidFlock.createTweenColours(_privates.startColour, _privates.endColour, _privates.colourSteps)
+            }
+            return this.colourTweenArray
+        }
+
         sketch.addAttractor = function(x,y,opt_config){
-            console.log("AA ",x,y)
             var config = opt_config || {};
             var _obsticle  = new Obsticle(x, y,_privates.boids, sketch, config);
             _privates.obsticles.push(_obsticle);
@@ -76,7 +81,6 @@ var _privates = {
         }
 
         sketch.setAttractorGrid = function(xDivs, yDivs){
-
             var xstep = this.getWidth() / (xDivs + 1);
             var ystep = this.getHeight() / (yDivs + 1);
             var _grid = [];
@@ -86,13 +90,12 @@ var _privates = {
                     var xp,yp,rep;
                     xp  = xstep+(xstep*i);
                     yp  = ystep+(xstep*ii);
-                    rep = (-0.002+Math.random() *.009)
+                    rep = (0.1+Math.random() *.009)
                     _rowX.push({x:xp, y:yp});
                     this.addAttractor(xp,yp,{repulsion:rep, excusionZone:Math.random()*80});
                 }
                 _grid.push(_rowX)
             }
-            console.log(_grid);
 
         }
     }
@@ -106,6 +109,28 @@ BoidFlock._onConfigSet = function(conig){
         //Underscore properties are not to be changed.
         if(String(value).charAt(0) != '_') this[value] = arguments[0][value];
     }
+}
+
+BoidFlock.createTweenColours = function(start, end, steps){
+    var _r, _g, _b, _rstep, _gstep, _bstep;
+    _r = start.r;
+    _g = start.g;
+    _b = start.b;
+
+    var returnArray = [];
+
+    _rstep = Math.abs( Math.round( parseInt(start.r - end.r) / steps ) );
+    _gstep = Math.abs( Math.round( parseInt(start.g - end.g) / steps ) );
+    _bstep = Math.abs( Math.round( parseInt(start.b - end.b) / steps ) );
+
+    for(var i=0; i<steps; i++){
+        var o = {r:_r, g:_g, b:_b}
+        returnArray.push(o);
+        _r += _rstep;
+        _g += _gstep;
+        _b += _bstep;
+    }
+    return returnArray;
 }
 
 
@@ -150,7 +175,9 @@ Obsticle.prototype = {
     },
     render : function(){
         this.update();
-        this.sketch.fill(this.colour.r, this.colour.g, this.colour.b);
+        //this.sketch.fill(this.colour.r, this.colour.g, this.colour.b);
+        //this.sketch.fill(this.sketch.getColourTweenArray()[7]);
+
         this.sketch.noStroke();
         this.sketch.ellipse(this.xpos, this.ypos, this.rad, this.rad);
     }
@@ -171,13 +198,13 @@ function Boid(x, y, sketch, opt_config) {
     this.maxspeed = 3;    // Maximum speed
     this.maxforce = 0.15; // Maximum steering force
 
-    this.startColour = {r:100,g:0,b:255};
+    this.startColour = {r:0,g:0,b:255};
     this.endColour = {r:255,g:0,b:50};
     this.tweenColours = true;
+    this.currentColour = 0;
+    this.colourStep = 1;
 
     if(opt_config) BoidFlock._onConfigSet.call(this, opt_config);
-
-
 }
 
 Boid.prototype.run = function(boids) {
@@ -235,8 +262,24 @@ Boid.prototype.seek = function(target) {
 Boid.prototype.render = function() {
     // Draw a triangle rotated in the direction of velocity
     var theta = this.velocity.heading() + this.sketch.radians(90);
-    this.sketch.fill(this.startColour.r, this.startColour.g, this.startColour.b);
-    this.sketch.stroke(this.endColour.r, this.endColour.g, this.endColour.b);
+    //this.sketch.fill(this.startColour.r, this.startColour.g, this.startColour.b);
+    var col = this.sketch.getColourTweenArray()[this.currentColour]
+    this.sketch.fill(col.r,col.g,col.b);
+    if(this.currentColour==this.sketch.getColourTweenArray().length-1){
+        this.colourStep = -1
+    }
+//
+    if(this.currentColour==1){
+        this.colourStep = 1
+    }
+    this.currentColour+=this.colourStep
+
+    //console.log( sketch.getColourTweenArray() );
+
+
+
+    //this.sketch.stroke(this.endColour.r, this.endColour.g, this.endColour.b);
+    this.sketch.stroke(col.r,col.g,col.b);
     this.sketch.push();
     this.sketch.translate(this.position.x,this.position.y);
     this.sketch.rotate(theta);
@@ -245,7 +288,7 @@ Boid.prototype.render = function() {
     this.sketch.vertex(-this.r, this.r*2);
     this.sketch.vertex(this.r, this.r*2);
     this.sketch.endShape(this.sketch.CLOSE);
-    this.sketch.ellipse(0,0,3, 20);
+    this.sketch.ellipse(0,0,8, 14);
     this.sketch.pop();
 }
 
