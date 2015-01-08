@@ -6,9 +6,9 @@ var _privates = {
     width : 1000,
     height:1000,
     flockSize : 100,
-    startColour:{r:10,g:0,b:255},
+    startColour:{r:0,g:255,b:0},
     endColour:{r:255,g:0,b:0},
-    backgroundColour:{r:255, g:255, b:255},
+    backgroundColour:{r:0, g:0, b:0},
     backgroundTransparency:2,
     tweenColours:true,
     colourSteps:100
@@ -130,6 +130,8 @@ BoidFlock.createTweenColours = function(start, end, steps){
         _g += _gstep;
         _b += _bstep;
     }
+    // Now check the first and last are correct
+    console.log(returnArray);
     return returnArray;
 }
 
