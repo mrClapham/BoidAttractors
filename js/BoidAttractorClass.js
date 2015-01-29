@@ -9,7 +9,7 @@ var _privates = {
     startColour:{r:0,g:255,b:0},
     endColour:{r:255,g:0,b:0},
     backgroundColour:{r:0, g:0, b:0},
-    backgroundTransparency:2,
+    backgroundTransparency:4,
     tweenColours:true,
     colourSteps:100
 }
@@ -39,6 +39,8 @@ var _privates = {
 //            var _obsticle3  = new Obsticle(450, 450,_privates.boids, sketch);
 //            _obsticle3.setRepulsion(-.003);
 //            _privates.obsticles       = [_obsticle, _obsticle2, _obsticle3];
+            sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, 255);
+
         }
 
         sketch.draw = function() {
