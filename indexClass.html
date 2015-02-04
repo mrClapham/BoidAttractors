@@ -8,6 +8,10 @@
         body{
         background-color: #000000;
         }
+        #targ{
+            margin:0 auto;
+            width:2000px;
+        }
     </style>
 </head>
 <body onload="onLoaded()">
@@ -21,7 +25,7 @@
 <script>
     onLoaded = function(){
     var targ = document.getElementById("targ")
-    var _flock = new BoidFlock(targ, {flockSize:200, width:1200, height:1000, backgroundColour:{r:0,g:0,b:0} });
+    var _flock = new BoidFlock(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
         _flock.setAttractorGrid(4, 4);
 
        // setInterval(function(){_flock.addAttractor(Math.random()*800, Math.random()*800), {repulsion:Math.random()}}, 1000)

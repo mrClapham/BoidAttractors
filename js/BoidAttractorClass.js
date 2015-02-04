@@ -165,7 +165,7 @@ Obsticle.prototype = {
             var exclusion = this.sketch.createVector(this.position.x,this.position.y);
             vec.sub(exclusion);
             if(vec.mag() < this.excusionZone ){
-                this.sketch.stroke(255, 0,0);
+                //this.sketch.stroke(255, 0,0);
                 //line(this.position.x, this.position.y, f.position.x, f.position.y);
                 //stroke(100, 255,0)
                 //line(this.position.x, this.position.y, exclusion.x, exclusion.y);
@@ -183,9 +183,11 @@ Obsticle.prototype = {
     render : function(){
         this.update();
         //this.sketch.fill(this.colour.r, this.colour.g, this.colour.b);
-        //this.sketch.fill(this.sketch.getColourTweenArray()[7]);
 
-        this.sketch.noStroke();
+        //this.sketch.noStroke();
+        this.sketch.smooth();
+        var col = this.sketch.getColourTweenArray()[0]
+        this.sketch.fill(col.r,col.g,col.b);
         this.sketch.ellipse(this.xpos, this.ypos, this.rad, this.rad);
     }
 
