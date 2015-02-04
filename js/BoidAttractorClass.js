@@ -6,9 +6,9 @@ var _privates = {
     width : 1000,
     height:1000,
     flockSize : 100,
-    startColour:{r:0,g:255,b:0},
+    startColour:{r:255,g:0,b:255},
     endColour:{r:255,g:0,b:0},
-    backgroundColour:{r:0, g:0, b:0},
+    backgroundColour:{r:72, g:203, b:175},
     backgroundTransparency:4,
     tweenColours:true,
     colourSteps:100
@@ -121,9 +121,9 @@ BoidFlock.createTweenColours = function(start, end, steps){
 
     var returnArray = [];
 
-    _rstep = Math.abs( Math.round( parseInt(start.r - end.r) / steps ) );
-    _gstep = Math.abs( Math.round( parseInt(start.g - end.g) / steps ) );
-    _bstep = Math.abs( Math.round( parseInt(start.b - end.b) / steps ) );
+    _rstep =  0 - Math.round( parseFloat(start.r - end.r) / steps  );
+    _gstep =  0 - Math.round( parseFloat(start.g - end.g) / steps  );
+    _bstep =  0 - Math.round( parseFloat(start.b - end.b) / steps  );
 
     for(var i=0; i<steps; i++){
         var o = {r:_r, g:_g, b:_b}
@@ -134,6 +134,9 @@ BoidFlock.createTweenColours = function(start, end, steps){
     }
     // Now check the first and last are correct
     console.log(returnArray);
+    console.log("R s : ",start.r, ". e : ", end.r,"_rstep : ",_rstep);
+    console.log("G s : ",start.g, ". e : ", end.g,"_gstep : ",_gstep);
+    console.log("_bstep : ",_bstep);
     return returnArray;
 }
 
