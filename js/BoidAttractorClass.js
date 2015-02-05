@@ -6,12 +6,13 @@ var _privates = {
     width : 1000,
     height:1000,
     flockSize : 100,
-    startColour:{r:0,g:255,b:0},
+    startColour:{r:255,g:0,b:255},
     endColour:{r:255,g:0,b:0},
-    backgroundColour:{r:0, g:0, b:0},
+    backgroundColour:{r:72, g:203, b:175},
     backgroundTransparency:4,
     tweenColours:true,
-    colourSteps:100
+    colourSteps:100,
+    followMouse:true
 }
 
     var _config = opt_config || {};
@@ -41,6 +42,8 @@ var _privates = {
 //            _privates.obsticles       = [_obsticle, _obsticle2, _obsticle3];
             sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, 255);
 
+            sketch.addMouseTacer()
+
         }
 
         sketch.draw = function() {
@@ -54,6 +57,18 @@ var _privates = {
             for (var i = 0; i < _privates.boids.length; i++) {
                 _privates.boids[i].run(_privates.boids);
             }
+            _privates.mouseTracer.setPosition( sketch.createVector(sketch.mouseX, sketch.mouseY))
+            sketch.mouseReleased=function(){
+                _privates.mouseTracer.setRepulsion(-.005 )
+            }
+
+            sketch.mousePressed=function(){
+                _privates.mouseTracer.setRepulsion(.005 )
+            }
+
+
+            _privates.mouseTracer.render();
+
         }
 
         sketch.getColourTweenArray = function(){
@@ -100,6 +115,10 @@ var _privates = {
             }
 
         }
+        sketch.addMouseTacer = function(){
+            _privates.mouseTracer = new Obsticle(100, 100, _privates.boids, sketch, {repulsion:-.08, excusionZone:80, excusionZone:200})
+            console.log(_privates.mouseTracer)
+        }
     }
     return new p5(BoidAttractorClass, targDiv);
 }
@@ -121,9 +140,9 @@ BoidFlock.createTweenColours = function(start, end, steps){
 
     var returnArray = [];
 
-    _rstep = Math.abs( Math.round( parseInt(start.r - end.r) / steps ) );
-    _gstep = Math.abs( Math.round( parseInt(start.g - end.g) / steps ) );
-    _bstep = Math.abs( Math.round( parseInt(start.b - end.b) / steps ) );
+    _rstep =  0 - Math.round( parseFloat(start.r - end.r) / steps  );
+    _gstep =  0 - Math.round( parseFloat(start.g - end.g) / steps  );
+    _bstep =  0 - Math.round( parseFloat(start.b - end.b) / steps  );
 
     for(var i=0; i<steps; i++){
         var o = {r:_r, g:_g, b:_b}
@@ -134,6 +153,9 @@ BoidFlock.createTweenColours = function(start, end, steps){
     }
     // Now check the first and last are correct
     console.log(returnArray);
+    console.log("R s : ",start.r, ". e : ", end.r,"_rstep : ",_rstep);
+    console.log("G s : ",start.g, ". e : ", end.g,"_gstep : ",_gstep);
+    console.log("_bstep : ",_bstep);
     return returnArray;
 }
 
@@ -162,7 +184,7 @@ Obsticle.prototype = {
             var exclusion = this.sketch.createVector(this.position.x,this.position.y);
             vec.sub(exclusion);
             if(vec.mag() < this.excusionZone ){
-                this.sketch.stroke(255, 0,0);
+                //this.sketch.stroke(255, 0,0);
                 //line(this.position.x, this.position.y, f.position.x, f.position.y);
                 //stroke(100, 255,0)
                 //line(this.position.x, this.position.y, exclusion.x, exclusion.y);
@@ -171,19 +193,35 @@ Obsticle.prototype = {
             }
         }
     },
+    setExclusionZone:function(value ){
+         this.excusionZone = value;
+    },
+    getExclusionZone:function(){
+        return this.excusionZone
+    },
     setRepulsion : function(value){
         this.repulsion = value;
     },
     getRepulsion : function(){
         return this.repulsion
     },
+    setPosition:function(value){
+        this.position = value;
+    },
+    getPosition:function(){
+        return this.position
+    },
     render : function(){
         this.update();
         //this.sketch.fill(this.colour.r, this.colour.g, this.colour.b);
-        //this.sketch.fill(this.sketch.getColourTweenArray()[7]);
 
-        this.sketch.noStroke();
-        this.sketch.ellipse(this.xpos, this.ypos, this.rad, this.rad);
+        //this.sketch.noStroke();
+        this.sketch.noFill();
+        this.sketch.stroke(0,0,0,2);
+        this.sketch.smooth();
+        var col = this.sketch.getColourTweenArray()[0]
+        //this.sketch.fill(col.r,col.g,col.b);
+        this.sketch.ellipse(this.position.x, this.position.y, this.getExclusionZone(), this.getExclusionZone());
     }
 
 }
