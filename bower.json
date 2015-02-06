@@ -1,6 +1,6 @@
 {
-  "name": "flockingExperiments",
-  "version": "0.0.0",
+  "name": "boid-attractors",
+  "version": "1.0.0",
   "homepage": "https://github.com/mrClapham/BoidAttractors",
   "authors": [
     "Graham Clapham <info@gcdesign.co.uk>"
