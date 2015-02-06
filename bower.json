@@ -15,7 +15,8 @@
     "test",
     "tests",
       "*.html",
-      "js/BoidAttractor.js"
+      "js/BoidAttractor.js",
+      "npm-debug.log"
   ],
   "dependencies": {
     "p5js": "~0.3.15"
