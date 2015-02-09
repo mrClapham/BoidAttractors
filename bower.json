@@ -1,19 +1,22 @@
 {
-  "name": "flockingExperiments",
-  "version": "0.0.0",
+  "name": "boid-attractors",
+  "version": "1.0.0",
   "homepage": "https://github.com/mrClapham/BoidAttractors",
   "authors": [
     "Graham Clapham <info@gcdesign.co.uk>"
   ],
-  "description": "Generativ art experiment with flocking",
+  "description": "Generative art experiment with flocking",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+      "*.html",
+      "js/BoidAttractor.js",
+      "npm-debug.log"
   ],
   "dependencies": {
     "p5js": "~0.3.15"
