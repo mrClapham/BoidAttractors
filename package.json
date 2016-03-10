@@ -1,0 +1,30 @@
+{
+  "name": "neon-flock",
+  "version": "1.0.0",
+  "description": "Neon flocking worms",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel": "6.5.2",
+    "babel-core": "6.7.0",
+    "babel-loader": "6.2.4",
+    "webpack": "1.12.14"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrClapham/BoidAttractors.git"
+  },
+  "keywords": [
+    "p5",
+    "flocking"
+  ],
+  "author": "Graham Clapham <clapham.graham@gmail.com> (http://www.grahamclapham.co.uk/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mrClapham/BoidAttractors/issues"
+  },
+  "homepage": "https://github.com/mrClapham/BoidAttractors#readme"
+}

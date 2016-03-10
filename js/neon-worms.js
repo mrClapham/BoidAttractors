@@ -1,4 +1,6 @@
-var BoidFlock = function(targDiv, opt_config){
+var p5 = require('p5');
+
+var Neonworms = function(targDiv, opt_config){
 
 var _privates = {
     boids : [],
@@ -13,7 +15,7 @@ var _privates = {
     tweenColours:true,
     colourSteps:100,
     followMouse:true
-}
+};
 
     var _config = opt_config || {};
 
@@ -23,7 +25,6 @@ var _privates = {
     }
 
     var BoidAttractorClass = function(sketch){
-
         sketch.setup = function() {
             sketch.createCanvas(_privates.width, _privates.height);
             var _boidConfig =     {startColour:_privates.startColour,
@@ -34,69 +35,53 @@ var _privates = {
             for (var i = 0; i < _privates.flockSize; i++) {
                 _privates.boids[i] = new Boid(sketch.random(sketch.width), sketch.random(sketch.height), sketch, _boidConfig);
             }
-//            var _obsticle   = new Obsticle(200, 500,_privates.boids,sketch, {repulsion:.3} );
-//            var _obsticle2  = new Obsticle(400, 400,_privates.boids, sketch);
-//            _obsticle2.setRepulsion(.003);
-//            var _obsticle3  = new Obsticle(450, 450,_privates.boids, sketch);
-//            _obsticle3.setRepulsion(-.003);
-//            _privates.obsticles       = [_obsticle, _obsticle2, _obsticle3];
             sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, 255);
-
             sketch.addMouseTacer()
-
-        }
+        };
 
         sketch.draw = function() {
             sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, _privates.backgroundTransparency);
 
             for(var i=0; i<_privates.obsticles.length; i++){
                 _privates.obsticles[i].render();
-            }
-
+            };
             // Run all the boids
             for (var i = 0; i < _privates.boids.length; i++) {
                 _privates.boids[i].run(_privates.boids);
-            }
+            };
             _privates.mouseTracer.setPosition( sketch.createVector(sketch.mouseX, sketch.mouseY))
             sketch.mouseReleased=function(){
-                _privates.mouseTracer.setRepulsion(-.005 )
-            }
-
+                _privates.mouseTracer.setRepulsion(-.005 );
+            };
             sketch.mousePressed=function(){
-                _privates.mouseTracer.setRepulsion(.005 )
-            }
-
-
+                _privates.mouseTracer.setRepulsion(.005 );
+            };
             _privates.mouseTracer.render();
-
-        }
+        };
 
         sketch.getColourTweenArray = function(){
             if(!this.colourTweenArray){
-                this.colourTweenArray = BoidFlock.createTweenColours(_privates.startColour, _privates.endColour, _privates.colourSteps)
+                this.colourTweenArray = Neonworms.createTweenColours(_privates.startColour, _privates.endColour, _privates.colourSteps)
             }
             return this.colourTweenArray
-        }
-
+        };
         sketch.addAttractor = function(x,y,opt_config){
             var config = opt_config || {};
             var _obsticle  = new Obsticle(x, y,_privates.boids, sketch, config);
             _privates.obsticles.push(_obsticle);
-        }
+        };
         sketch.setWidth = function(value){
             _privates.width = value;
-        }
+        };
         sketch.getWidth = function(){
             return _privates.width
-        }
-
+        };
         sketch.setHeight = function(value){
             _privates.height = value;
-        }
+        };
         sketch.getHeight = function(){
             return _privates.height
-        }
-
+        };
         sketch.setAttractorGrid = function(xDivs, yDivs){
             var xstep = this.getWidth() / (xDivs + 1);
             var ystep = this.getHeight() / (yDivs + 1);
@@ -114,25 +99,22 @@ var _privates = {
                 _grid.push(_rowX)
             }
 
-        }
+        };
         sketch.addMouseTacer = function(){
             _privates.mouseTracer = new Obsticle(100, 100, _privates.boids, sketch, {repulsion:-.08, excusionZone:80, excusionZone:200})
-            console.log(_privates.mouseTracer)
         }
-    }
+    };
     return new p5(BoidAttractorClass, targDiv);
-}
-
+};
 //Static classes
-BoidFlock._onConfigSet = function(conig){
-
+Neonworms._onConfigSet = function(conig){
     for(var value in arguments[0]){
         //Underscore properties are not to be changed.
         if(String(value).charAt(0) != '_') this[value] = arguments[0][value];
     }
-}
+};
 
-BoidFlock.createTweenColours = function(start, end, steps){
+Neonworms.createTweenColours = function(start, end, steps){
     var _r, _g, _b, _rstep, _gstep, _bstep;
     _r = start.r;
     _g = start.g;
@@ -152,12 +134,8 @@ BoidFlock.createTweenColours = function(start, end, steps){
         _b += _bstep;
     }
     // Now check the first and last are correct
-    console.log(returnArray);
-    console.log("R s : ",start.r, ". e : ", end.r,"_rstep : ",_rstep);
-    console.log("G s : ",start.g, ". e : ", end.g,"_gstep : ",_gstep);
-    console.log("_bstep : ",_bstep);
     return returnArray;
-}
+};
 
 
 // An obsticle to be avoided or to act as anb attractor
@@ -173,8 +151,8 @@ function Obsticle(x,y,flock, sketch, opt_config){
     this.position = this.sketch.createVector(this.xpos, this.ypos)
     this.colour = {r:0,g:100, b:100};
 
-    if(opt_config) BoidFlock._onConfigSet.call(this, opt_config);
-}
+    if(opt_config) Neonworms._onConfigSet.call(this, opt_config);
+};
 
 Obsticle.prototype = {
     update : function(){
@@ -223,10 +201,7 @@ Obsticle.prototype = {
         //this.sketch.fill(col.r,col.g,col.b);
         this.sketch.ellipse(this.position.x, this.position.y, this.getExclusionZone(), this.getExclusionZone());
     }
-
-}
-
-
+};
 
 // Boid class
 // Methods for Separation, Cohesion, Alignment added
@@ -239,14 +214,12 @@ function Boid(x, y, sketch, opt_config) {
     this.r = 3.0;
     this.maxspeed = 3;    // Maximum speed
     this.maxforce = 0.15; // Maximum steering force
-
     this.startColour = {r:0,g:0,b:255};
     this.endColour = {r:255,g:0,b:50};
     this.tweenColours = true;
     this.currentColour = 0;
     this.colourStep = 1;
-
-    if(opt_config) BoidFlock._onConfigSet.call(this, opt_config);
+    if(opt_config) Neonworms._onConfigSet.call(this, opt_config);
 }
 
 Boid.prototype.run = function(boids) {
@@ -254,12 +227,12 @@ Boid.prototype.run = function(boids) {
     this.update();
     this.borders();
     this.render();
-}
+};
 
 // Forces go into acceleration
 Boid.prototype.applyForce = function(force) {
     this.acceleration.add(force);
-}
+};
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
@@ -274,7 +247,7 @@ Boid.prototype.flock = function(boids) {
     this.applyForce(sep);
     this.applyForce(ali);
     this.applyForce(coh);
-}
+};
 
 // Method to update location
 Boid.prototype.update = function() {
@@ -285,7 +258,7 @@ Boid.prototype.update = function() {
     this.position.add(this.velocity);
     // Reset accelertion to 0 each cycle
     this.acceleration.mult(0);
-}
+};
 
 // A method that calculates and applies a steering force towards a target
 // STEER = DESIRED MINUS VELOCITY
@@ -298,7 +271,7 @@ Boid.prototype.seek = function(target) {
     var steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce); // Limit to maximum steering force
     return steer;
-}
+};
 
 // Draw boid as a circle
 Boid.prototype.render = function() {
@@ -309,18 +282,11 @@ Boid.prototype.render = function() {
     this.sketch.fill(col.r,col.g,col.b);
     if(this.currentColour==this.sketch.getColourTweenArray().length-1){
         this.colourStep = -1
-    }
-//
+    };
     if(this.currentColour==1){
         this.colourStep = 1
-    }
-    this.currentColour+=this.colourStep
-
-    //console.log( sketch.getColourTweenArray() );
-
-
-
-    //this.sketch.stroke(this.endColour.r, this.endColour.g, this.endColour.b);
+    };
+    this.currentColour+=this.colourStep;
     this.sketch.stroke(col.r,col.g,col.b);
     this.sketch.push();
     this.sketch.translate(this.position.x,this.position.y);
@@ -332,7 +298,7 @@ Boid.prototype.render = function() {
     this.sketch.endShape(this.sketch.CLOSE);
     this.sketch.ellipse(0,0,8, 14);
     this.sketch.pop();
-}
+};
 
 // Wraparound
 Boid.prototype.borders = function() {
@@ -359,7 +325,7 @@ Boid.prototype.borders = function() {
         if (this.position.x > this.sketch.width + this.r) this.position.x = -this.r;
         if (this.position.y > this.sketch.height + this.r) this.position.y = -this.r;
     }
-}
+};
 
 // Separation
 // Method checks for nearby boids and steers away
@@ -440,4 +406,7 @@ Boid.prototype.cohesion = function(boids) {
     } else {
         return this.sketch.createVector(0, 0);
     }
-}
+};
+
+module.exports = Neonworms;
+
