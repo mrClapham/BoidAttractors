@@ -1,8 +1,8 @@
 {
-  "name": "neon-flock",
+  "name": "neon-worms",
   "version": "1.0.0",
   "description": "Neon flocking worms",
-  "main": "index.js",
+  "main": "js/neon-worms.js",
   "dependencies": {},
   "devDependencies": {
     "babel": "6.5.2",
@@ -11,7 +11,10 @@
     "webpack": "1.12.14"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "webpack --config webpack.config.js",
+      "watch": "webpack --config webpack.config.js --watch",
+      "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",

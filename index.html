@@ -11,32 +11,18 @@
             margin:0 auto;
             width:2000px;
         }
-        #copy-content{
-            position: absolute;
-            color: #ffffff;
-            top:100px;
-            left:100px;
-            width:200px;
-        }
     </style>
 </head>
 <body onload="onLoaded()">
-<div id="copy-content"><h1>Hello World</h1></div>
-<div id="targ">
-
-</div>
-
+    <div id="targ"></div>
 </body>
 </html>
 
 <script>
-    onLoaded = function(){
-    var targ = document.getElementById("targ")
-    var _flock = new Neonworms(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
-        _flock.setAttractorGrid(4, 4);
+    document.addEventListener("DOMContentLoaded", function(){
+        var targ = document.querySelector("#targ");
+        var _flock = new Neonworms(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
+        _flock.setAttractorGrid(8, 8);
+    });
 
-       // setInterval(function(){_flock.addAttractor(Math.random()*800, Math.random()*800), {repulsion:Math.random()}}, 1000)
-        //setInterval(function(){console.log(_flock)}, 1000)
-
-    }
 </script>

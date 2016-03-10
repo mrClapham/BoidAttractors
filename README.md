@@ -1,7 +1,7 @@
-Boid Attractors
+Neon worms
 ==============
 
-Attraction and repulsion using Shiffman's flocking algorithm.
+A pointless but pretty library using Shiffman's flocking algorithm and attraction and repulsion.
 
 Built using [p5.js](http://p5js.org/).
 
