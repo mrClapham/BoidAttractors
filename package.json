@@ -1,0 +1,24 @@
+{
+  "name": "neon-worms",
+  "version": "1.0.0",
+  "description": "A canvas implementation of Reynolds Boids flocking algorithm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrClapham/neon-worms.git"
+  },
+  "keywords": [
+    "flock",
+    "js",
+    "boids"
+  ],
+  "author": "Graham Clapham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mrClapham/neon-worms/issues"
+  },
+  "homepage": "https://github.com/mrClapham/neon-worms#readme"
+}
