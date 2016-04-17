@@ -1,19 +1,23 @@
-var BoidFlock = function(targDiv, opt_config){
+var p5 = require('p5');
 
-var _privates = {
-    boids : [],
-    obsticles : [],
-    width : 1000,
-    height:1000,
-    flockSize : 100,
-    startColour:{r:255,g:0,b:255},
-    endColour:{r:255,g:0,b:0},
-    backgroundColour:{r:72, g:203, b:175},
-    backgroundTransparency:4,
-    tweenColours:true,
-    colourSteps:100,
-    followMouse:true
-}
+
+var NeonWorms = function(targDiv, opt_config){
+
+    var _privates = {
+        boids : [],
+        obsticles : [],
+        width : 1000,
+        height:1000,
+        flockSize : 100,
+        startColour:{r:255,g:0,b:255},
+        endColour:{r:255,g:0,b:0},
+        backgroundColour:{r:72, g:203, b:175},
+        backgroundTransparency:4,
+        tweenColours:true,
+        colourSteps:100,
+        followMouse:true,
+        playing: true
+    };
 
     var _config = opt_config || {};
 
@@ -27,19 +31,14 @@ var _privates = {
         sketch.setup = function() {
             sketch.createCanvas(_privates.width, _privates.height);
             var _boidConfig =     {startColour:_privates.startColour,
-            endColour:_privates.endColour,
-            tweenColours:_privates.tweenColours}
+                endColour:_privates.endColour,
+                tweenColours:_privates.tweenColours}
 
             // Add an initial set of boids into the system
             for (var i = 0; i < _privates.flockSize; i++) {
                 _privates.boids[i] = new Boid(sketch.random(sketch.width), sketch.random(sketch.height), sketch, _boidConfig);
             }
-//            var _obsticle   = new Obsticle(200, 500,_privates.boids,sketch, {repulsion:.3} );
-//            var _obsticle2  = new Obsticle(400, 400,_privates.boids, sketch);
-//            _obsticle2.setRepulsion(.003);
-//            var _obsticle3  = new Obsticle(450, 450,_privates.boids, sketch);
-//            _obsticle3.setRepulsion(-.003);
-//            _privates.obsticles       = [_obsticle, _obsticle2, _obsticle3];
+
             sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, 255);
 
             sketch.addMouseTacer()
@@ -47,36 +46,49 @@ var _privates = {
         }
 
         sketch.draw = function() {
-            sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, _privates.backgroundTransparency);
+            if( sketch.getPlaying() ){
+                sketch.background(_privates.backgroundColour.r, _privates.backgroundColour.g, _privates.backgroundColour.b, _privates.backgroundTransparency);
 
-            for(var i=0; i<_privates.obsticles.length; i++){
-                _privates.obsticles[i].render();
+                for(var i=0; i<_privates.obsticles.length; i++){
+                    _privates.obsticles[i].render();
+                }
+                // Run all the boids
+                for (var i = 0; i < _privates.boids.length; i++) {
+                    _privates.boids[i].run(_privates.boids);
+                }
+                _privates.mouseTracer.setPosition( sketch.createVector(sketch.mouseX, sketch.mouseY))
+                sketch.mouseReleased=function(){
+                    _privates.mouseTracer.setRepulsion(-.005 )
+                };
+                sketch.mousePressed=function(){
+                    _privates.mouseTracer.setRepulsion(.005 )
+                };
+
+
+                _privates.mouseTracer.render();
             }
 
-            // Run all the boids
-            for (var i = 0; i < _privates.boids.length; i++) {
-                _privates.boids[i].run(_privates.boids);
+
+
+        };
+///////////////
+        sketch.getPlaying = function(){
+            return _privates.playing;
+        };
+
+        sketch.setPlaying = function(value){
+            if(typeof value !== 'boolean'){
+                return;
             }
-            _privates.mouseTracer.setPosition( sketch.createVector(sketch.mouseX, sketch.mouseY))
-            sketch.mouseReleased=function(){
-                _privates.mouseTracer.setRepulsion(-.005 )
-            }
-
-            sketch.mousePressed=function(){
-                _privates.mouseTracer.setRepulsion(.005 )
-            }
-
-
-            _privates.mouseTracer.render();
-
-        }
+            _privates.playing = value;
+        };
 
         sketch.getColourTweenArray = function(){
             if(!this.colourTweenArray){
-                this.colourTweenArray = BoidFlock.createTweenColours(_privates.startColour, _privates.endColour, _privates.colourSteps)
+                this.colourTweenArray = NeonWorms.createTweenColours(_privates.startColour, _privates.endColour, _privates.colourSteps)
             }
             return this.colourTweenArray
-        }
+        };
 
         sketch.addAttractor = function(x,y,opt_config){
             var config = opt_config || {};
@@ -117,14 +129,13 @@ var _privates = {
         }
         sketch.addMouseTacer = function(){
             _privates.mouseTracer = new Obsticle(100, 100, _privates.boids, sketch, {repulsion:-.08, excusionZone:80, excusionZone:200})
-            console.log(_privates.mouseTracer)
         }
     }
     return new p5(BoidAttractorClass, targDiv);
 }
 
 //Static classes
-BoidFlock._onConfigSet = function(conig){
+NeonWorms._onConfigSet = function(conig){
 
     for(var value in arguments[0]){
         //Underscore properties are not to be changed.
@@ -132,7 +143,7 @@ BoidFlock._onConfigSet = function(conig){
     }
 }
 
-BoidFlock.createTweenColours = function(start, end, steps){
+NeonWorms.createTweenColours = function(start, end, steps){
     var _r, _g, _b, _rstep, _gstep, _bstep;
     _r = start.r;
     _g = start.g;
@@ -152,10 +163,6 @@ BoidFlock.createTweenColours = function(start, end, steps){
         _b += _bstep;
     }
     // Now check the first and last are correct
-    console.log(returnArray);
-    console.log("R s : ",start.r, ". e : ", end.r,"_rstep : ",_rstep);
-    console.log("G s : ",start.g, ". e : ", end.g,"_gstep : ",_gstep);
-    console.log("_bstep : ",_bstep);
     return returnArray;
 }
 
@@ -173,7 +180,7 @@ function Obsticle(x,y,flock, sketch, opt_config){
     this.position = this.sketch.createVector(this.xpos, this.ypos)
     this.colour = {r:0,g:100, b:100};
 
-    if(opt_config) BoidFlock._onConfigSet.call(this, opt_config);
+    if(opt_config) NeonWorms._onConfigSet.call(this, opt_config);
 }
 
 Obsticle.prototype = {
@@ -194,7 +201,7 @@ Obsticle.prototype = {
         }
     },
     setExclusionZone:function(value ){
-         this.excusionZone = value;
+        this.excusionZone = value;
     },
     getExclusionZone:function(){
         return this.excusionZone
@@ -246,7 +253,7 @@ function Boid(x, y, sketch, opt_config) {
     this.currentColour = 0;
     this.colourStep = 1;
 
-    if(opt_config) BoidFlock._onConfigSet.call(this, opt_config);
+    if(opt_config) NeonWorms._onConfigSet.call(this, opt_config);
 }
 
 Boid.prototype.run = function(boids) {
@@ -316,11 +323,6 @@ Boid.prototype.render = function() {
     }
     this.currentColour+=this.colourStep
 
-    //console.log( sketch.getColourTweenArray() );
-
-
-
-    //this.sketch.stroke(this.endColour.r, this.endColour.g, this.endColour.b);
     this.sketch.stroke(col.r,col.g,col.b);
     this.sketch.push();
     this.sketch.translate(this.position.x,this.position.y);
@@ -440,4 +442,8 @@ Boid.prototype.cohesion = function(boids) {
     } else {
         return this.sketch.createVector(0, 0);
     }
-}
+};
+
+
+
+module.exports = NeonWorms;

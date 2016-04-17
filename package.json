@@ -4,7 +4,9 @@
   "description": "A canvas implementation of Reynolds Boids flocking algorithm",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpacklib.config.js",
+    "watch": "webpack --config webpacklib.config.js --watch"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/mrClapham/neon-worms/issues"
   },
-  "homepage": "https://github.com/mrClapham/neon-worms#readme"
+  "homepage": "https://github.com/mrClapham/neon-worms#readme",
+  "dependencies": {
+    "babel-core": "^6.7.6",
+    "babel-loader": "^6.2.4",
+    "p5": "^0.4.23",
+    "webpack": "^1.13.0"
+  }
 }

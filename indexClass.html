@@ -2,8 +2,7 @@
 <html>
 <head>
     <title></title>
-    <script src="bower_components/p5js/lib/p5.min.js"></script>
-    <script src="js/BoidAttractorClass.js"></script>
+    <script src="dist/NeonWorms.js"></script>
     <style>
         body{
         background-color: #000000;
@@ -23,7 +22,11 @@
     </style>
 </head>
 <body onload="onLoaded()">
-<div id="copy-content"><p>neon worms</p></div>
+<div id="copy-content"><p>neon worms</p>
+
+<button id="stop">STOP</button>
+<button id="start">START</button>
+</div>
 <div id="targ">
 
 </div>
@@ -33,12 +36,17 @@
 
 <script>
     onLoaded = function(){
-    var targ = document.getElementById("targ")
-    var _flock = new BoidFlock(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
+    var targ = document.querySelector("targ");
+
+    var _flock = new NeonWorms(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
         _flock.setAttractorGrid(4, 4);
 
-       // setInterval(function(){_flock.addAttractor(Math.random()*800, Math.random()*800), {repulsion:Math.random()}}, 1000)
-        //setInterval(function(){console.log(_flock)}, 1000)
+        var stopBtt = document.querySelector("#stop");
+        stopBtt.addEventListener("click", function(){
+            _flock.setPlaying(!_flock.getPlaying());
+        });
+
+
 
     }
 </script>
