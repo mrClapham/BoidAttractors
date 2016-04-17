@@ -2,10 +2,51 @@
 <html>
 <head>
     <title></title>
-    <script src="bower_components/p5js/lib/p5.min.js"></script>
-    <script src="js/BoidAttractor.js"></script>
+    <script src="dist/NeonWorms.js"></script>
+    <style>
+        body{
+        background-color: #000000;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        #targ{
+            margin:0 auto;
+            width:2000px;
+        }
+        #copy-content{
+            position: absolute;
+            color: #ffffff;
+            top:100px;
+            left:100px;
+            width:200px;
+        }
+    </style>
 </head>
-<body>
+<body onload="onLoaded()">
+<div id="copy-content"><p>neon worms</p>
+
+<button id="stop">STOP</button>
+<button id="start">START</button>
+</div>
+<div id="targ">
+
+</div>
 
 </body>
 </html>
+
+<script>
+    onLoaded = function(){
+    var targ = document.querySelector("targ");
+
+    var _flock = new NeonWorms(targ, {flockSize:200, width:2000, height:1000, backgroundColour:{r:0,g:0,b:0} });
+        _flock.setAttractorGrid(4, 4);
+
+        var stopBtt = document.querySelector("#stop");
+        stopBtt.addEventListener("click", function(){
+            _flock.setPlaying(!_flock.getPlaying());
+        });
+
+
+
+    }
+</script>
