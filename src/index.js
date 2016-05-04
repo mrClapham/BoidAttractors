@@ -64,12 +64,8 @@ var NeonWorms = function(targDiv, opt_config){
                     _privates.mouseTracer.setRepulsion(.005 )
                 };
 
-
                 _privates.mouseTracer.render();
             }
-
-
-
         };
 ///////////////
         sketch.getPlaying = function(){
@@ -79,6 +75,11 @@ var NeonWorms = function(targDiv, opt_config){
         sketch.setPlaying = function(value){
             if(typeof value !== 'boolean'){
                 return;
+            }
+            if(value === false){
+                sketch.noLoop();
+            }else{
+                sketch.loop();
             }
             _privates.playing = value;
         };
